@@ -54,6 +54,8 @@ namespace SerialCommunication
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
+            bool verbindingMaken = !serialPortArduino.IsOpen;
+
             try
             {
                 if (serialPortArduino.IsOpen)
@@ -82,6 +84,21 @@ namespace SerialCommunication
                     serialPortArduino.RtsEnable = checkBoxRtsEnable.Checked;
 
                     serialPortArduino.Open();
+                    serialPortArduino.WriteLine("ping");
+
+                    string antwoord = serialPortArduino.ReadLine().Trim();
+                    if (antwoord != "pong")
+                    {
+                        serialPortArduino.Close();
+                        buttonConnect.Text = "Connect";
+                        radioButtonVerbonden.Checked = false;
+                        labelStatus.Text = "Geen geldig antwoord van Arduino";
+
+                        MessageBox.Show("Arduino antwoordde niet met pong.", "Verbindingsfout",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     buttonConnect.Text = "Disconnect";
                     radioButtonVerbonden.Checked = true;
                     labelStatus.Text = "Verbonden met " + serialPortArduino.PortName;
@@ -89,6 +106,11 @@ namespace SerialCommunication
             }
             catch (Exception ex)
             {
+                if (verbindingMaken && serialPortArduino.IsOpen)
+                {
+                    serialPortArduino.Close();
+                }
+
                 buttonConnect.Text = serialPortArduino.IsOpen ? "Disconnect" : "Connect";
                 radioButtonVerbonden.Checked = serialPortArduino.IsOpen;
                 labelStatus.Text = ex.Message;
