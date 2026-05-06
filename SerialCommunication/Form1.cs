@@ -26,6 +26,7 @@ namespace SerialCommunication
         private const int BevestigKnopPin = 5;
 
         private Timer timerOefening5;
+        private Timer timerOefening6;
         private AlarmToestand alarmToestand = AlarmToestand.OK;
         private Label labelToestandTitel;
         private Label labelToestand;
@@ -43,6 +44,11 @@ namespace SerialCommunication
             timerOefening5 = new Timer(components);
             timerOefening5.Interval = 1000;
             timerOefening5.Tick += timerOefening5_Tick;
+
+            timerOefening6 = new Timer(components);
+            timerOefening6.Interval = 1000;
+            timerOefening6.Tick += timerOefening6_Tick;
+
             tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
             InitializeOefening5StatusLabels();
             UpdateTimerOefening5();
@@ -279,10 +285,12 @@ namespace SerialCommunication
             if (tabControl.SelectedTab == tabPageOefening5)
             {
                 timerOefening5.Start();
+                timerOefening6.Start();
             }
             else
             {
                 timerOefening5.Stop();
+                timerOefening6.Stop();
             }
         }
 
@@ -308,6 +316,16 @@ namespace SerialCommunication
         }
 
         private void timerOefening5_Tick(object sender, EventArgs e)
+        {
+            HandleOefeningTimerTick();
+        }
+
+        private void timerOefening6_Tick(object sender, EventArgs e)
+        {
+            HandleOefeningTimerTick();
+        }
+
+        private void HandleOefeningTimerTick()
         {
             try
             {
