@@ -46,7 +46,7 @@ namespace SerialCommunication
             timerOefening5.Tick += timerOefening5_Tick;
 
             timerOefening6 = new Timer(components);
-            timerOefening6.Interval = 1000;
+            timerOefening6.Interval = 250;
             timerOefening6.Tick += timerOefening6_Tick;
 
             tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
@@ -276,6 +276,24 @@ namespace SerialCommunication
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (tabControl.SelectedTab == tabPageOefening6)
+            {
+                alarmToestand = AlarmToestand.OK;
+                VisualiseerAlarmToestand();
+
+                try
+                {
+                    if (serialPortArduino.IsOpen)
+                    {
+                        ApplyAlarmOutputs();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    HandleSerialRuntimeError(ex);
+                }
+            }
+
             UpdateTimerOefening5();
         }
 
@@ -337,9 +355,9 @@ namespace SerialCommunication
                     return;
                 }
 
+                bool bevestigd = ReadDigitalInput(BevestigKnopPin);
                 int alarmValue = ReadAnalogInput(AlarmPotPin);
                 int lm35Value = ReadAnalogInput(Lm35Pin);
-                bool bevestigd = ReadDigitalInput(BevestigKnopPin);
 
                 double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
                 double alarmOffset = -10.0;
