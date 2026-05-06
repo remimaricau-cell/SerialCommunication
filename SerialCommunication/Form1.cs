@@ -359,7 +359,7 @@ namespace SerialCommunication
                 int alarmValue = ReadAnalogInput(AlarmPotPin);
                 int lm35Value = ReadAnalogInput(Lm35Pin);
 
-                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
+                double alarmRichtingscoefficient = (100.0 - -10.0) / 1023.0;
                 double alarmOffset = -10.0;
                 double alarmTemperatuur = alarmRichtingscoefficient * alarmValue + alarmOffset;
 
