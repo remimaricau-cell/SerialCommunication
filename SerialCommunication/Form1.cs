@@ -14,7 +14,21 @@ namespace SerialCommunication
 {
     public partial class Form1 : Form
     {
+        private enum AlarmToestand
+        {
+            OK,
+            ALARM,
+            BEVESTIGD
+        }
+
+        private const int LedPin = 2;
+        private const int BuzzerPin = 3;
+        private const int BevestigKnopPin = 5;
+
         private Timer timerOefening5;
+        private AlarmToestand alarmToestand = AlarmToestand.OK;
+        private Label labelToestandTitel;
+        private Label labelToestand;
 
         public Form1()
         {
@@ -30,6 +44,7 @@ namespace SerialCommunication
             timerOefening5.Interval = 1000;
             timerOefening5.Tick += timerOefening5_Tick;
             tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
+            InitializeOefening5StatusLabels();
             UpdateTimerOefening5();
         }
 
@@ -271,6 +286,27 @@ namespace SerialCommunication
             }
         }
 
+        private void InitializeOefening5StatusLabels()
+        {
+            label9.Text = "Alarmwaarde";
+
+            labelToestandTitel = new Label();
+            labelToestandTitel.AutoSize = true;
+            labelToestandTitel.Font = label9.Font;
+            labelToestandTitel.Location = new Point(694, 464);
+            labelToestandTitel.Text = "Toestand";
+
+            labelToestand = new Label();
+            labelToestand.Font = labelGewensteTemp.Font;
+            labelToestand.Location = new Point(886, 458);
+            labelToestand.Size = new Size(190, 35);
+            labelToestand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+
+            tabPageOefening5.Controls.Add(labelToestandTitel);
+            tabPageOefening5.Controls.Add(labelToestand);
+            UpdateToestandLabel();
+        }
+
         private void timerOefening5_Tick(object sender, EventArgs e)
         {
             try
@@ -283,19 +319,22 @@ namespace SerialCommunication
 
                 int analog0 = ReadAnalogInput(0);
                 int analog1 = ReadAnalogInput(1);
+                bool alarmBevestigd = ReadDigitalInput(BevestigKnopPin);
 
-                double gewensteRichtingscoefficient = (45.0 - 5.0) / 1023.0;
-                double gewensteOffset = 5.0;
-                double gewensteTemperatuur = gewensteRichtingscoefficient * analog1 + gewensteOffset;
+                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
+                double alarmOffset = -10.0;
+                double alarmTemperatuur = alarmRichtingscoefficient * analog1 + alarmOffset;
 
                 double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
                 double huidigeOffset = 0.0;
                 double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
 
-                labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
+                labelGewensteTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
-                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
+                UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, alarmBevestigd);
+                ApplyAlarmOutputs();
+                UpdateToestandLabel();
             }
             catch (Exception ex)
             {
@@ -322,6 +361,67 @@ namespace SerialCommunication
             }
 
             return value;
+        }
+
+        private bool ReadDigitalInput(int pin)
+        {
+            serialPortArduino.WriteLine("get d" + pin);
+
+            string response = serialPortArduino.ReadLine().Trim();
+            string prefix = "d" + pin + ": ";
+            if (!response.StartsWith(prefix))
+            {
+                throw new InvalidOperationException(response);
+            }
+
+            string valueText = response.Substring(prefix.Length);
+            if (valueText == "0") return false;
+            if (valueText == "1") return true;
+
+            throw new InvalidOperationException("Ongeldige digitale waarde: " + response);
+        }
+
+        private void UpdateAlarmToestand(double huidigeTemperatuur, double alarmTemperatuur, bool alarmBevestigd)
+        {
+            switch (alarmToestand)
+            {
+                case AlarmToestand.OK:
+                    if (huidigeTemperatuur > alarmTemperatuur)
+                    {
+                        alarmToestand = AlarmToestand.ALARM;
+                    }
+                    break;
+
+                case AlarmToestand.ALARM:
+                    if (alarmBevestigd)
+                    {
+                        alarmToestand = huidigeTemperatuur > alarmTemperatuur
+                            ? AlarmToestand.BEVESTIGD
+                            : AlarmToestand.OK;
+                    }
+                    break;
+
+                case AlarmToestand.BEVESTIGD:
+                    if (huidigeTemperatuur < alarmTemperatuur)
+                    {
+                        alarmToestand = AlarmToestand.OK;
+                    }
+                    break;
+            }
+        }
+
+        private void ApplyAlarmOutputs()
+        {
+            bool ledAan = alarmToestand == AlarmToestand.ALARM || alarmToestand == AlarmToestand.BEVESTIGD;
+            bool buzzerAan = alarmToestand == AlarmToestand.ALARM;
+
+            WriteSetCommand("set d" + LedPin + (ledAan ? " high" : " low"));
+            WriteSetCommand("set d" + BuzzerPin + (buzzerAan ? " high" : " low"));
+        }
+
+        private void UpdateToestandLabel()
+        {
+            labelToestand.Text = alarmToestand.ToString();
         }
 
         private void WriteSetCommand(string command)
