@@ -21,6 +21,8 @@ namespace SerialCommunication
             BEVESTIGD
         }
 
+        private const int AlarmPotPin = 0;
+        private const int Lm35Pin = 1;
         private const int LedPin = 2;
         private const int BuzzerPin = 3;
         private const int BevestigKnopPin = 5;
@@ -28,8 +30,6 @@ namespace SerialCommunication
         private Timer timerOefening5;
         private Timer timerOefening6;
         private AlarmToestand alarmToestand = AlarmToestand.OK;
-        private Label labelToestandTitel;
-        private Label labelToestand;
 
         public Form1()
         {
@@ -50,7 +50,6 @@ namespace SerialCommunication
             timerOefening6.Tick += timerOefening6_Tick;
 
             tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
-            InitializeOefening5StatusLabels();
             UpdateTimerOefening5();
         }
 
@@ -282,50 +281,21 @@ namespace SerialCommunication
 
         private void UpdateTimerOefening5()
         {
-            if (tabControl.SelectedTab == tabPageOefening5)
-            {
-                timerOefening5.Start();
-                timerOefening6.Start();
-            }
-            else
-            {
-                timerOefening5.Stop();
-                timerOefening6.Stop();
-            }
-        }
-
-        private void InitializeOefening5StatusLabels()
-        {
-            label9.Text = "Alarmwaarde";
-
-            labelToestandTitel = new Label();
-            labelToestandTitel.AutoSize = true;
-            labelToestandTitel.Font = label9.Font;
-            labelToestandTitel.Location = new Point(694, 464);
-            labelToestandTitel.Text = "Toestand";
-
-            labelToestand = new Label();
-            labelToestand.Font = labelGewensteTemp.Font;
-            labelToestand.Location = new Point(886, 458);
-            labelToestand.Size = new Size(190, 35);
-            labelToestand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-
-            tabPageOefening5.Controls.Add(labelToestandTitel);
-            tabPageOefening5.Controls.Add(labelToestand);
-            UpdateToestandLabel();
+            timerOefening5.Enabled = tabControl.SelectedTab == tabPageOefening5;
+            timerOefening6.Enabled = tabControl.SelectedTab == tabPageOefening6;
         }
 
         private void timerOefening5_Tick(object sender, EventArgs e)
         {
-            HandleOefeningTimerTick();
+            HandleOefening5TimerTick();
         }
 
         private void timerOefening6_Tick(object sender, EventArgs e)
         {
-            HandleOefeningTimerTick();
+            HandleOefening6TimerTick();
         }
 
-        private void HandleOefeningTimerTick()
+        private void HandleOefening5TimerTick()
         {
             try
             {
@@ -337,26 +307,56 @@ namespace SerialCommunication
 
                 int analog0 = ReadAnalogInput(0);
                 int analog1 = ReadAnalogInput(1);
-                bool alarmBevestigd = ReadDigitalInput(BevestigKnopPin);
 
-                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
-                double alarmOffset = -10.0;
-                double alarmTemperatuur = alarmRichtingscoefficient * analog1 + alarmOffset;
+                double gewensteRichtingscoefficient = (45.0 - 5.0) / 1023.0;
+                double gewensteOffset = 5.0;
+                double gewensteTemperatuur = gewensteRichtingscoefficient * analog1 + gewensteOffset;
 
                 double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
                 double huidigeOffset = 0.0;
                 double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
 
-                labelGewensteTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
+                labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
-                UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, alarmBevestigd);
-                ApplyAlarmOutputs();
-                UpdateToestandLabel();
+                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
             }
             catch (Exception ex)
             {
-                labelStatus.Text = ex.Message;
+                HandleSerialRuntimeError(ex);
+            }
+        }
+
+        private void HandleOefening6TimerTick()
+        {
+            try
+            {
+                if (!serialPortArduino.IsOpen)
+                {
+                    labelStatus.Text = "Geen open seriële verbinding";
+                    return;
+                }
+
+                int alarmValue = ReadAnalogInput(AlarmPotPin);
+                int lm35Value = ReadAnalogInput(Lm35Pin);
+                bool bevestigd = ReadDigitalInput(BevestigKnopPin);
+
+                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
+                double alarmOffset = -10.0;
+                double alarmTemperatuur = alarmRichtingscoefficient * alarmValue + alarmOffset;
+
+                double huidigeTemperatuur = lm35Value * 500.0 / 1023.0;
+
+                labelAlarmTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
+                label15.Text = huidigeTemperatuur.ToString("0.0") + " °C";
+
+                UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, bevestigd);
+                ApplyAlarmOutputs();
+                VisualiseerAlarmToestand();
+            }
+            catch (Exception ex)
+            {
+                HandleSerialRuntimeError(ex);
             }
         }
 
@@ -399,7 +399,7 @@ namespace SerialCommunication
             throw new InvalidOperationException("Ongeldige digitale waarde: " + response);
         }
 
-        private void UpdateAlarmToestand(double huidigeTemperatuur, double alarmTemperatuur, bool alarmBevestigd)
+        private void UpdateAlarmToestand(double huidigeTemperatuur, double alarmTemperatuur, bool bevestigd)
         {
             switch (alarmToestand)
             {
@@ -411,7 +411,7 @@ namespace SerialCommunication
                     break;
 
                 case AlarmToestand.ALARM:
-                    if (alarmBevestigd)
+                    if (bevestigd)
                     {
                         alarmToestand = huidigeTemperatuur > alarmTemperatuur
                             ? AlarmToestand.BEVESTIGD
@@ -437,9 +437,33 @@ namespace SerialCommunication
             WriteSetCommand("set d" + BuzzerPin + (buzzerAan ? " high" : " low"));
         }
 
-        private void UpdateToestandLabel()
+        private void VisualiseerAlarmToestand()
         {
-            labelToestand.Text = alarmToestand.ToString();
+            label16.Text = alarmToestand.ToString();
+            labelStatus.Text = alarmToestand.ToString();
+        }
+
+        private void HandleSerialRuntimeError(Exception ex)
+        {
+            labelStatus.Text = ex.Message;
+
+            if (ex is TimeoutException || ex is System.IO.IOException || ex is UnauthorizedAccessException)
+            {
+                try
+                {
+                    if (serialPortArduino.IsOpen)
+                    {
+                        serialPortArduino.Close();
+                    }
+                }
+                catch (Exception)
+                { }
+
+                timerOefening5.Stop();
+                timerOefening6.Stop();
+                buttonConnect.Text = "Connect";
+                radioButtonVerbonden.Checked = false;
+            }
         }
 
         private void WriteSetCommand(string command)

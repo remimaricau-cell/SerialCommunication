@@ -90,6 +90,13 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.serialPortArduino = new System.IO.Ports.SerialPort(this.components);
+            this.tabPageOefening6 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.labelAlarmTemp = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageInstellingen.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -110,6 +117,7 @@
             this.tabPageOefening5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.statusStrip.SuspendLayout();
+            this.tabPageOefening6.SuspendLayout();
             this.SuspendLayout();
             // 
             // radioButtonVerbonden
@@ -169,6 +177,7 @@
             this.tabControl.Controls.Add(this.tabPageOefening3);
             this.tabControl.Controls.Add(this.tabPageOefening4);
             this.tabControl.Controls.Add(this.tabPageOefening5);
+            this.tabControl.Controls.Add(this.tabPageOefening6);
             this.tabControl.Location = new System.Drawing.Point(18, 81);
             this.tabControl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl.Name = "tabControl";
@@ -867,6 +876,75 @@
             this.serialPortArduino.ReadTimeout = 1000;
             this.serialPortArduino.WriteTimeout = 1000;
             // 
+            // tabPageOefening6
+            // 
+            this.tabPageOefening6.Controls.Add(this.label16);
+            this.tabPageOefening6.Controls.Add(this.label15);
+            this.tabPageOefening6.Controls.Add(this.labelAlarmTemp);
+            this.tabPageOefening6.Controls.Add(this.label13);
+            this.tabPageOefening6.Controls.Add(this.label12);
+            this.tabPageOefening6.Controls.Add(this.label10);
+            this.tabPageOefening6.Location = new System.Drawing.Point(4, 29);
+            this.tabPageOefening6.Name = "tabPageOefening6";
+            this.tabPageOefening6.Size = new System.Drawing.Size(1168, 608);
+            this.tabPageOefening6.TabIndex = 6;
+            this.tabPageOefening6.Text = "Oefening 6";
+            this.tabPageOefening6.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(266, 124);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(88, 20);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Alarmwaarde";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(266, 178);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(100, 20);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "Huidige temperatuur";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(282, 248);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(53, 20);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Toestand";
+            // 
+            // labelAlarmTemp
+            // 
+            this.labelAlarmTemp.AutoSize = true;
+            this.labelAlarmTemp.Location = new System.Drawing.Point(449, 130);
+            this.labelAlarmTemp.Name = "labelAlarmTemp";
+            this.labelAlarmTemp.Size = new System.Drawing.Size(51, 30);
+            this.labelAlarmTemp.TabIndex = 3;
+            this.labelAlarmTemp.Text = "0,0 °C";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(447, 186);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(51, 30);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "0,0 °C";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(445, 261);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 30);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "OK";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -911,6 +989,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.tabPageOefening6.ResumeLayout(false);
+            this.tabPageOefening6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -979,6 +1059,13 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel labelStatus;
         private System.IO.Ports.SerialPort serialPortArduino;
+        private System.Windows.Forms.TabPage tabPageOefening6;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label labelAlarmTemp;
     }
 }
 
