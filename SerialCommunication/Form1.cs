@@ -20,6 +20,9 @@ namespace SerialCommunication
             checkBoxDigital2.CheckedChanged += checkBoxDigital2_CheckedChanged;
             checkBoxDigital3.CheckedChanged += checkBoxDigital3_CheckedChanged;
             checkBoxDigital4.CheckedChanged += checkBoxDigital4_CheckedChanged;
+            trackBarPWM9.Scroll += trackBarPWM9_Scroll;
+            trackBarPWM10.Scroll += trackBarPWM10_Scroll;
+            trackBarPWM11.Scroll += trackBarPWM11_Scroll;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -184,6 +187,43 @@ namespace SerialCommunication
             {
                 labelStatus.Text = ex.Message;
                 MessageBox.Show(ex.Message, "Fout digitale uitgang",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void trackBarPWM9_Scroll(object sender, EventArgs e)
+        {
+            SendPwmOutputCommand(9, trackBarPWM9.Value);
+        }
+
+        private void trackBarPWM10_Scroll(object sender, EventArgs e)
+        {
+            SendPwmOutputCommand(10, trackBarPWM10.Value);
+        }
+
+        private void trackBarPWM11_Scroll(object sender, EventArgs e)
+        {
+            SendPwmOutputCommand(11, trackBarPWM11.Value);
+        }
+
+        private void SendPwmOutputCommand(int pin, int value)
+        {
+            try
+            {
+                if (!serialPortArduino.IsOpen)
+                {
+                    labelStatus.Text = "Geen open seriële verbinding";
+                    return;
+                }
+
+                string command = "set pwm" + pin + " " + value;
+                serialPortArduino.WriteLine(command);
+                labelStatus.Text = command;
+            }
+            catch (Exception ex)
+            {
+                labelStatus.Text = ex.Message;
+                MessageBox.Show(ex.Message, "Fout analoge uitgang",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
