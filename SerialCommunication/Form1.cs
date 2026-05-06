@@ -286,11 +286,11 @@ namespace SerialCommunication
 
                 double gewensteRichtingscoefficient = (45.0 - 5.0) / 1023.0;
                 double gewensteOffset = 5.0;
-                double gewensteTemperatuur = gewensteRichtingscoefficient * analog0 + gewensteOffset;
+                double gewensteTemperatuur = gewensteRichtingscoefficient * analog1 + gewensteOffset;
 
                 double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
                 double huidigeOffset = 0.0;
-                double huidigeTemperatuur = huidigeRichtingscoefficient * analog1 + huidigeOffset;
+                double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
 
                 labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
