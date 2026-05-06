@@ -17,6 +17,9 @@ namespace SerialCommunication
         public Form1()
         {
             InitializeComponent();
+            checkBoxDigital2.CheckedChanged += checkBoxDigital2_CheckedChanged;
+            checkBoxDigital3.CheckedChanged += checkBoxDigital3_CheckedChanged;
+            checkBoxDigital4.CheckedChanged += checkBoxDigital4_CheckedChanged;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -146,6 +149,43 @@ namespace SerialCommunication
             if (radioButtonHandshakeXonXoff.Checked) return Handshake.XOnXOff;
 
             return Handshake.None;
+        }
+
+        private void checkBoxDigital2_CheckedChanged(object sender, EventArgs e)
+        {
+            SendDigitalOutputCommand(2, checkBoxDigital2.Checked);
+        }
+
+        private void checkBoxDigital3_CheckedChanged(object sender, EventArgs e)
+        {
+            SendDigitalOutputCommand(3, checkBoxDigital3.Checked);
+        }
+
+        private void checkBoxDigital4_CheckedChanged(object sender, EventArgs e)
+        {
+            SendDigitalOutputCommand(4, checkBoxDigital4.Checked);
+        }
+
+        private void SendDigitalOutputCommand(int pin, bool high)
+        {
+            try
+            {
+                if (!serialPortArduino.IsOpen)
+                {
+                    labelStatus.Text = "Geen open seriële verbinding";
+                    return;
+                }
+
+                string command = "set d" + pin + (high ? " high" : " low");
+                serialPortArduino.WriteLine(command);
+                labelStatus.Text = command;
+            }
+            catch (Exception ex)
+            {
+                labelStatus.Text = ex.Message;
+                MessageBox.Show(ex.Message, "Fout digitale uitgang",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
