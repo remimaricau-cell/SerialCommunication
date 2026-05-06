@@ -14,6 +14,8 @@ namespace SerialCommunication
 {
     public partial class Form1 : Form
     {
+        private Timer timerOefening5;
+
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +25,12 @@ namespace SerialCommunication
             trackBarPWM9.Scroll += trackBarPWM9_Scroll;
             trackBarPWM10.Scroll += trackBarPWM10_Scroll;
             trackBarPWM11.Scroll += trackBarPWM11_Scroll;
+
+            timerOefening5 = new Timer(components);
+            timerOefening5.Interval = 1000;
+            timerOefening5.Tick += timerOefening5_Tick;
+            tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
+            UpdateTimerOefening5();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -181,6 +189,15 @@ namespace SerialCommunication
 
                 string command = "set d" + pin + (high ? " high" : " low");
                 serialPortArduino.WriteLine(command);
+                string response = serialPortArduino.ReadLine().Trim();
+                if (response != "set done")
+                {
+                    labelStatus.Text = response;
+                    MessageBox.Show(response, "Fout digitale uitgang",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 labelStatus.Text = command;
             }
             catch (Exception ex)
@@ -218,6 +235,15 @@ namespace SerialCommunication
 
                 string command = "set pwm" + pin + " " + value;
                 serialPortArduino.WriteLine(command);
+                string response = serialPortArduino.ReadLine().Trim();
+                if (response != "set done")
+                {
+                    labelStatus.Text = response;
+                    MessageBox.Show(response, "Fout analoge uitgang",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 labelStatus.Text = command;
             }
             catch (Exception ex)
@@ -225,6 +251,87 @@ namespace SerialCommunication
                 labelStatus.Text = ex.Message;
                 MessageBox.Show(ex.Message, "Fout analoge uitgang",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateTimerOefening5();
+        }
+
+        private void UpdateTimerOefening5()
+        {
+            if (tabControl.SelectedTab == tabPageOefening5)
+            {
+                timerOefening5.Start();
+            }
+            else
+            {
+                timerOefening5.Stop();
+            }
+        }
+
+        private void timerOefening5_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!serialPortArduino.IsOpen)
+                {
+                    labelStatus.Text = "Geen open seriële verbinding";
+                    return;
+                }
+
+                int analog0 = ReadAnalogInput(0);
+                int analog1 = ReadAnalogInput(1);
+
+                double gewensteRichtingscoefficient = (45.0 - 5.0) / 1023.0;
+                double gewensteOffset = 5.0;
+                double gewensteTemperatuur = gewensteRichtingscoefficient * analog0 + gewensteOffset;
+
+                double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
+                double huidigeOffset = 0.0;
+                double huidigeTemperatuur = huidigeRichtingscoefficient * analog1 + huidigeOffset;
+
+                labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
+                labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
+
+                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "high" : "low"));
+            }
+            catch (Exception ex)
+            {
+                labelStatus.Text = ex.Message;
+            }
+        }
+
+        private int ReadAnalogInput(int pin)
+        {
+            serialPortArduino.WriteLine("get a" + pin);
+
+            string response = serialPortArduino.ReadLine().Trim();
+            string prefix = "a" + pin + ": ";
+            if (!response.StartsWith(prefix))
+            {
+                throw new InvalidOperationException(response);
+            }
+
+            string valueText = response.Substring(prefix.Length);
+            int value;
+            if (!int.TryParse(valueText, out value))
+            {
+                throw new InvalidOperationException("Ongeldige analoge waarde: " + response);
+            }
+
+            return value;
+        }
+
+        private void WriteSetCommand(string command)
+        {
+            serialPortArduino.WriteLine(command);
+
+            string response = serialPortArduino.ReadLine().Trim();
+            if (response != "set done")
+            {
+                throw new InvalidOperationException(response);
             }
         }
     }
