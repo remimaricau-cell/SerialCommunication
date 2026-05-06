@@ -295,7 +295,7 @@ namespace SerialCommunication
                 labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
-                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "high" : "low"));
+                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
             }
             catch (Exception ex)
             {
