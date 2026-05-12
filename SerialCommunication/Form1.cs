@@ -30,7 +30,6 @@ namespace SerialCommunication
         private Timer timerOefening5;
         private Timer timerOefeningAlarm;
         private AlarmToestand alarmToestand = AlarmToestand.OK;
-        private bool bevestigKnopWasIngedrukt;
 
         public Form1()
         {
@@ -283,7 +282,6 @@ namespace SerialCommunication
             if (tabControl.SelectedTab == tabPageOefening6)
             {
                 alarmToestand = AlarmToestand.OK;
-                bevestigKnopWasIngedrukt = false;
                 VisualiseerAlarmToestand();
 
                 try
@@ -359,9 +357,7 @@ namespace SerialCommunication
                     return;
                 }
 
-                bool bevestigKnopIngedrukt = ReadDigitalInput(BevestigKnopPin);
-                bool bevestigingGevraagd = bevestigKnopIngedrukt && !bevestigKnopWasIngedrukt;
-                bevestigKnopWasIngedrukt = bevestigKnopIngedrukt;
+                bool bevestigingGevraagd = ReadDigitalInput(BevestigKnopPin);
                 int alarmValue = ReadAnalogInput(AlarmPotPin);
                 int lm35Value = ReadAnalogInput(Lm35Pin);
 
