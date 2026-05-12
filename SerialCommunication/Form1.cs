@@ -340,7 +340,7 @@ namespace SerialCommunication
                 double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
 
                 labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
-                labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
+                labelHuidigeTempOefening5.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
                 WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
             }
@@ -372,7 +372,7 @@ namespace SerialCommunication
                 double huidigeTemperatuur = lm35Value * 500.0 / 1023.0;
 
                 labelAlarmTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
-                labelHuidigeTempAlarm.Text = huidigeTemperatuur.ToString("0.0") + " °C";
+                labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
                 UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, bevestigingGevraagd);
                 ApplyAlarmOutputs();
