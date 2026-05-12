@@ -337,7 +337,7 @@ namespace SerialCommunication
                 double huidigeOffset = 0.0;
                 double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
 
-                labelGewensteTemp.Text = gewensteTemperatuur.ToString("0.0") + " °C";
+                labelGewensteTempOefening5.Text = gewensteTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTempOefening5.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
                 WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
@@ -358,16 +358,18 @@ namespace SerialCommunication
                 }
 
                 bool bevestigingGevraagd = ReadDigitalInput(BevestigKnopPin);
-                int alarmValue = ReadAnalogInput(AlarmPotPin);
-                int lm35Value = ReadAnalogInput(Lm35Pin);
+                int gewensteValue = ReadAnalogInput(AlarmPotPin);
+                int huidigeValue = ReadAnalogInput(Lm35Pin);
 
-                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
-                double alarmOffset = -10.0;
-                double alarmTemperatuur = alarmRichtingscoefficient * alarmValue + alarmOffset;
+                double gewensteRichtingscoefficient = (60.0 - -10.0) / 1023.0;
+                double gewensteOffset = -10.0;
+                double alarmTemperatuur = gewensteRichtingscoefficient * gewensteValue + gewensteOffset;
 
-                double huidigeTemperatuur = lm35Value * 500.0 / 1023.0;
+                double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
+                double huidigeOffset = 0.0;
+                double huidigeTemperatuur = huidigeRichtingscoefficient * huidigeValue + huidigeOffset;
 
-                labelAlarmTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
+                labelGewensteTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
                 labelHuidigeTemp.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
                 UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, bevestigingGevraagd);

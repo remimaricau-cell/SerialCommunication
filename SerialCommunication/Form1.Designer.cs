@@ -84,7 +84,7 @@
             this.tabPageOefening5 = new System.Windows.Forms.TabPage();
             this.labelHuidigeTempOefening5 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.labelGewensteTemp = new System.Windows.Forms.Label();
+            this.labelGewensteTempOefening5 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -94,7 +94,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.labelAlarmTemp = new System.Windows.Forms.Label();
+            this.labelGewensteTemp = new System.Windows.Forms.Label();
             this.labelHuidigeTemp = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
@@ -787,7 +787,7 @@
             // 
             this.tabPageOefening5.Controls.Add(this.labelHuidigeTempOefening5);
             this.tabPageOefening5.Controls.Add(this.label11);
-            this.tabPageOefening5.Controls.Add(this.labelGewensteTemp);
+            this.tabPageOefening5.Controls.Add(this.labelGewensteTempOefening5);
             this.tabPageOefening5.Controls.Add(this.label9);
             this.tabPageOefening5.Controls.Add(this.pictureBox5);
             this.tabPageOefening5.Location = new System.Drawing.Point(4, 29);
@@ -821,16 +821,16 @@
             this.label11.TabIndex = 3;
             this.label11.Text = "Huidige Temperatuur";
             // 
-            // labelGewensteTemp
+            // labelGewensteTempOefening5
             // 
-            this.labelGewensteTemp.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelGewensteTemp.Location = new System.Drawing.Point(926, 366);
-            this.labelGewensteTemp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelGewensteTemp.Name = "labelGewensteTemp";
-            this.labelGewensteTemp.Size = new System.Drawing.Size(150, 35);
-            this.labelGewensteTemp.TabIndex = 2;
-            this.labelGewensteTemp.Text = "21,0 °C";
-            this.labelGewensteTemp.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelGewensteTempOefening5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelGewensteTempOefening5.Location = new System.Drawing.Point(926, 366);
+            this.labelGewensteTempOefening5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelGewensteTempOefening5.Name = "labelGewensteTempOefening5";
+            this.labelGewensteTempOefening5.Size = new System.Drawing.Size(150, 35);
+            this.labelGewensteTempOefening5.TabIndex = 2;
+            this.labelGewensteTempOefening5.Text = "21,0 °C";
+            this.labelGewensteTempOefening5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label9
             // 
@@ -880,7 +880,7 @@
             // 
             this.tabPageOefening6.Controls.Add(this.labelStatus);
             this.tabPageOefening6.Controls.Add(this.labelHuidigeTemp);
-            this.tabPageOefening6.Controls.Add(this.labelAlarmTemp);
+            this.tabPageOefening6.Controls.Add(this.labelGewensteTemp);
             this.tabPageOefening6.Controls.Add(this.label13);
             this.tabPageOefening6.Controls.Add(this.label12);
             this.tabPageOefening6.Controls.Add(this.label10);
@@ -918,14 +918,14 @@
             this.label13.TabIndex = 2;
             this.label13.Text = "Toestand";
             // 
-            // labelAlarmTemp
+            // labelGewensteTemp
             // 
-            this.labelAlarmTemp.AutoSize = true;
-            this.labelAlarmTemp.Location = new System.Drawing.Point(449, 130);
-            this.labelAlarmTemp.Name = "labelAlarmTemp";
-            this.labelAlarmTemp.Size = new System.Drawing.Size(51, 30);
-            this.labelAlarmTemp.TabIndex = 3;
-            this.labelAlarmTemp.Text = "0,0 °C";
+            this.labelGewensteTemp.AutoSize = true;
+            this.labelGewensteTemp.Location = new System.Drawing.Point(449, 130);
+            this.labelGewensteTemp.Name = "labelGewensteTemp";
+            this.labelGewensteTemp.Size = new System.Drawing.Size(51, 30);
+            this.labelGewensteTemp.TabIndex = 3;
+            this.labelGewensteTemp.Text = "0,0 °C";
             // 
             // labelHuidigeTemp
             // 
@@ -1053,7 +1053,7 @@
         internal System.Windows.Forms.TabPage tabPageOefening5;
         internal System.Windows.Forms.Label labelHuidigeTempOefening5;
         internal System.Windows.Forms.Label label11;
-        internal System.Windows.Forms.Label labelGewensteTemp;
+        internal System.Windows.Forms.Label labelGewensteTempOefening5;
         internal System.Windows.Forms.Label label9;
         internal System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -1065,7 +1065,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelHuidigeTemp;
-        private System.Windows.Forms.Label labelAlarmTemp;
+        private System.Windows.Forms.Label labelGewensteTemp;
     }
 }
 
