@@ -28,8 +28,9 @@ namespace SerialCommunication
         private const int BevestigKnopPin = 5;
 
         private Timer timerOefening5;
-        private Timer timerOefening6;
+        private Timer timerOefeningAlarm;
         private AlarmToestand alarmToestand = AlarmToestand.OK;
+        private bool bevestigKnopWasIngedrukt;
 
         public Form1()
         {
@@ -45,12 +46,12 @@ namespace SerialCommunication
             timerOefening5.Interval = 1000;
             timerOefening5.Tick += timerOefening5_Tick;
 
-            timerOefening6 = new Timer(components);
-            timerOefening6.Interval = 250;
-            timerOefening6.Tick += timerOefening6_Tick;
+            timerOefeningAlarm = new Timer(components);
+            timerOefeningAlarm.Interval = 1000;
+            timerOefeningAlarm.Tick += timerOefeningAlarm_Tick;
 
             tabControl.SelectedIndexChanged += tabControl_SelectedIndexChanged;
-            UpdateTimerOefening5();
+            UpdateTimers();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -97,7 +98,7 @@ namespace SerialCommunication
                     serialPortArduino.Close();
                     buttonConnect.Text = "Connect";
                     radioButtonVerbonden.Checked = false;
-                    labelStatus.Text = "Verbinding verbroken";
+                    labelFeedback.Text = "Verbinding verbroken";
                 }
                 else
                 {
@@ -126,7 +127,7 @@ namespace SerialCommunication
                         serialPortArduino.Close();
                         buttonConnect.Text = "Connect";
                         radioButtonVerbonden.Checked = false;
-                        labelStatus.Text = "Geen geldig antwoord van Arduino";
+                        labelFeedback.Text = "Geen geldig antwoord van Arduino";
 
                         MessageBox.Show("Arduino antwoordde niet met pong.", "Verbindingsfout",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -135,8 +136,10 @@ namespace SerialCommunication
 
                     buttonConnect.Text = "Disconnect";
                     radioButtonVerbonden.Checked = true;
-                    labelStatus.Text = "Verbonden met " + serialPortArduino.PortName;
+                    labelFeedback.Text = "Verbonden met " + serialPortArduino.PortName;
                 }
+
+                UpdateTimers();
             }
             catch (Exception ex)
             {
@@ -147,7 +150,8 @@ namespace SerialCommunication
 
                 buttonConnect.Text = serialPortArduino.IsOpen ? "Disconnect" : "Connect";
                 radioButtonVerbonden.Checked = serialPortArduino.IsOpen;
-                labelStatus.Text = ex.Message;
+                labelFeedback.Text = ex.Message;
+                UpdateTimers();
 
                 MessageBox.Show(ex.Message, "Verbindingsfout",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -203,7 +207,7 @@ namespace SerialCommunication
             {
                 if (!serialPortArduino.IsOpen)
                 {
-                    labelStatus.Text = "Geen open seriële verbinding";
+                    labelFeedback.Text = "Geen open seriële verbinding";
                     return;
                 }
 
@@ -212,17 +216,17 @@ namespace SerialCommunication
                 string response = serialPortArduino.ReadLine().Trim();
                 if (response != "set done")
                 {
-                    labelStatus.Text = response;
+                    labelFeedback.Text = response;
                     MessageBox.Show(response, "Fout digitale uitgang",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                labelStatus.Text = command;
+                labelFeedback.Text = command;
             }
             catch (Exception ex)
             {
-                labelStatus.Text = ex.Message;
+                labelFeedback.Text = ex.Message;
                 MessageBox.Show(ex.Message, "Fout digitale uitgang",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -249,7 +253,7 @@ namespace SerialCommunication
             {
                 if (!serialPortArduino.IsOpen)
                 {
-                    labelStatus.Text = "Geen open seriële verbinding";
+                    labelFeedback.Text = "Geen open seriële verbinding";
                     return;
                 }
 
@@ -258,17 +262,17 @@ namespace SerialCommunication
                 string response = serialPortArduino.ReadLine().Trim();
                 if (response != "set done")
                 {
-                    labelStatus.Text = response;
+                    labelFeedback.Text = response;
                     MessageBox.Show(response, "Fout analoge uitgang",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                labelStatus.Text = command;
+                labelFeedback.Text = command;
             }
             catch (Exception ex)
             {
-                labelStatus.Text = ex.Message;
+                labelFeedback.Text = ex.Message;
                 MessageBox.Show(ex.Message, "Fout analoge uitgang",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -279,6 +283,7 @@ namespace SerialCommunication
             if (tabControl.SelectedTab == tabPageOefening6)
             {
                 alarmToestand = AlarmToestand.OK;
+                bevestigKnopWasIngedrukt = false;
                 VisualiseerAlarmToestand();
 
                 try
@@ -294,13 +299,13 @@ namespace SerialCommunication
                 }
             }
 
-            UpdateTimerOefening5();
+            UpdateTimers();
         }
 
-        private void UpdateTimerOefening5()
+        private void UpdateTimers()
         {
             timerOefening5.Enabled = tabControl.SelectedTab == tabPageOefening5;
-            timerOefening6.Enabled = tabControl.SelectedTab == tabPageOefening6;
+            timerOefeningAlarm.Enabled = tabControl.SelectedTab == tabPageOefening6;
         }
 
         private void timerOefening5_Tick(object sender, EventArgs e)
@@ -308,9 +313,9 @@ namespace SerialCommunication
             HandleOefening5TimerTick();
         }
 
-        private void timerOefening6_Tick(object sender, EventArgs e)
+        private void timerOefeningAlarm_Tick(object sender, EventArgs e)
         {
-            HandleOefening6TimerTick();
+            HandleOefeningAlarmTimerTick();
         }
 
         private void HandleOefening5TimerTick()
@@ -319,7 +324,7 @@ namespace SerialCommunication
             {
                 if (!serialPortArduino.IsOpen)
                 {
-                    labelStatus.Text = "Geen open seriële verbinding";
+                    labelFeedback.Text = "Geen open seriële verbinding";
                     return;
                 }
 
@@ -345,30 +350,31 @@ namespace SerialCommunication
             }
         }
 
-        private void HandleOefening6TimerTick()
+        private void HandleOefeningAlarmTimerTick()
         {
             try
             {
-                if (!serialPortArduino.IsOpen)
+                if (!ControleerArduinoVerbinding())
                 {
-                    labelStatus.Text = "Geen open seriële verbinding";
                     return;
                 }
 
-                bool bevestigd = ReadDigitalInput(BevestigKnopPin);
+                bool bevestigKnopIngedrukt = ReadDigitalInput(BevestigKnopPin);
+                bool bevestigingGevraagd = bevestigKnopIngedrukt && !bevestigKnopWasIngedrukt;
+                bevestigKnopWasIngedrukt = bevestigKnopIngedrukt;
                 int alarmValue = ReadAnalogInput(AlarmPotPin);
                 int lm35Value = ReadAnalogInput(Lm35Pin);
 
-                double alarmRichtingscoefficient = (100.0 - -10.0) / 1023.0;
+                double alarmRichtingscoefficient = (60.0 - -10.0) / 1023.0;
                 double alarmOffset = -10.0;
                 double alarmTemperatuur = alarmRichtingscoefficient * alarmValue + alarmOffset;
 
                 double huidigeTemperatuur = lm35Value * 500.0 / 1023.0;
 
                 labelAlarmTemp.Text = alarmTemperatuur.ToString("0.0") + " °C";
-                label15.Text = huidigeTemperatuur.ToString("0.0") + " °C";
+                labelHuidigeTempAlarm.Text = huidigeTemperatuur.ToString("0.0") + " °C";
 
-                UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, bevestigd);
+                UpdateAlarmToestand(huidigeTemperatuur, alarmTemperatuur, bevestigingGevraagd);
                 ApplyAlarmOutputs();
                 VisualiseerAlarmToestand();
             }
@@ -376,6 +382,28 @@ namespace SerialCommunication
             {
                 HandleSerialRuntimeError(ex);
             }
+        }
+
+        private bool ControleerArduinoVerbinding()
+        {
+            if (!serialPortArduino.IsOpen)
+            {
+                radioButtonVerbonden.Checked = false;
+                buttonConnect.Text = "Connect";
+                labelFeedback.Text = "Geen open seriële verbinding met de Arduino.";
+                return false;
+            }
+
+            serialPortArduino.DiscardInBuffer();
+            serialPortArduino.WriteLine("ping");
+
+            string response = serialPortArduino.ReadLine().Trim();
+            if (response != "pong")
+            {
+                throw new InvalidOperationException("Geen geldig antwoord van Arduino: " + response);
+            }
+
+            return true;
         }
 
         private int ReadAnalogInput(int pin)
@@ -417,7 +445,7 @@ namespace SerialCommunication
             throw new InvalidOperationException("Ongeldige digitale waarde: " + response);
         }
 
-        private void UpdateAlarmToestand(double huidigeTemperatuur, double alarmTemperatuur, bool bevestigd)
+        private void UpdateAlarmToestand(double huidigeTemperatuur, double alarmTemperatuur, bool bevestigingGevraagd)
         {
             switch (alarmToestand)
             {
@@ -429,7 +457,7 @@ namespace SerialCommunication
                     break;
 
                 case AlarmToestand.ALARM:
-                    if (bevestigd)
+                    if (bevestigingGevraagd)
                     {
                         alarmToestand = huidigeTemperatuur > alarmTemperatuur
                             ? AlarmToestand.BEVESTIGD
@@ -457,15 +485,19 @@ namespace SerialCommunication
 
         private void VisualiseerAlarmToestand()
         {
-            label16.Text = alarmToestand.ToString();
             labelStatus.Text = alarmToestand.ToString();
+            labelFeedback.Text = "Alarmregeling: " + alarmToestand;
         }
 
         private void HandleSerialRuntimeError(Exception ex)
         {
-            labelStatus.Text = ex.Message;
+            string message = "Seriële communicatiefout: " + ex.Message;
+            labelFeedback.Text = message;
 
-            if (ex is TimeoutException || ex is System.IO.IOException || ex is UnauthorizedAccessException)
+            if (ex is TimeoutException ||
+                ex is System.IO.IOException ||
+                ex is UnauthorizedAccessException ||
+                ex is InvalidOperationException)
             {
                 try
                 {
@@ -478,7 +510,7 @@ namespace SerialCommunication
                 { }
 
                 timerOefening5.Stop();
-                timerOefening6.Stop();
+                timerOefeningAlarm.Stop();
                 buttonConnect.Text = "Connect";
                 radioButtonVerbonden.Checked = false;
             }

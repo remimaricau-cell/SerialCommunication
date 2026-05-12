@@ -88,15 +88,15 @@
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.labelFeedback = new System.Windows.Forms.ToolStripStatusLabel();
             this.serialPortArduino = new System.IO.Ports.SerialPort(this.components);
             this.tabPageOefening6 = new System.Windows.Forms.TabPage();
             this.label10 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.labelAlarmTemp = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.labelHuidigeTempAlarm = new System.Windows.Forms.Label();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageInstellingen.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -858,7 +858,7 @@
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.labelStatus});
+            this.labelFeedback});
             this.statusStrip.Location = new System.Drawing.Point(0, 739);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 21, 0);
@@ -866,10 +866,10 @@
             this.statusStrip.TabIndex = 10;
             this.statusStrip.Text = "statusStrip1";
             // 
-            // labelStatus
+            // labelFeedback
             // 
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(0, 15);
+            this.labelFeedback.Name = "labelFeedback";
+            this.labelFeedback.Size = new System.Drawing.Size(0, 15);
             // 
             // serialPortArduino
             // 
@@ -878,8 +878,8 @@
             // 
             // tabPageOefening6
             // 
-            this.tabPageOefening6.Controls.Add(this.label16);
-            this.tabPageOefening6.Controls.Add(this.label15);
+            this.tabPageOefening6.Controls.Add(this.labelStatus);
+            this.tabPageOefening6.Controls.Add(this.labelHuidigeTempAlarm);
             this.tabPageOefening6.Controls.Add(this.labelAlarmTemp);
             this.tabPageOefening6.Controls.Add(this.label13);
             this.tabPageOefening6.Controls.Add(this.label12);
@@ -927,23 +927,23 @@
             this.labelAlarmTemp.TabIndex = 3;
             this.labelAlarmTemp.Text = "0,0 °C";
             // 
-            // label15
+            // labelHuidigeTempAlarm
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(447, 186);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(51, 30);
-            this.label15.TabIndex = 4;
-            this.label15.Text = "0,0 °C";
+            this.labelHuidigeTempAlarm.AutoSize = true;
+            this.labelHuidigeTempAlarm.Location = new System.Drawing.Point(447, 186);
+            this.labelHuidigeTempAlarm.Name = "labelHuidigeTempAlarm";
+            this.labelHuidigeTempAlarm.Size = new System.Drawing.Size(51, 30);
+            this.labelHuidigeTempAlarm.TabIndex = 4;
+            this.labelHuidigeTempAlarm.Text = "0,0 °C";
             // 
-            // label16
+            // labelStatus
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(445, 261);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(47, 30);
-            this.label16.TabIndex = 5;
-            this.label16.Text = "OK";
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(445, 261);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(47, 30);
+            this.labelStatus.TabIndex = 5;
+            this.labelStatus.Text = "OK";
             // 
             // Form1
             // 
@@ -1057,14 +1057,14 @@
         internal System.Windows.Forms.Label label9;
         internal System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel labelStatus;
+        private System.Windows.Forms.ToolStripStatusLabel labelFeedback;
         private System.IO.Ports.SerialPort serialPortArduino;
         private System.Windows.Forms.TabPage tabPageOefening6;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelHuidigeTempAlarm;
         private System.Windows.Forms.Label labelAlarmTemp;
     }
 }
