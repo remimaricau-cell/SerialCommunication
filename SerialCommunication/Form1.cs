@@ -21,8 +21,8 @@ namespace SerialCommunication
             BEVESTIGD
         }
 
-        private const int AlarmPotPin = 0;
-        private const int Lm35Pin = 1;
+        private const int AlarmPotPin = 1;
+        private const int Lm35Pin = 0;
         private const int LedPin = 2;
         private const int BuzzerPin = 3;
         private const int BevestigKnopPin = 5;
