@@ -81,12 +81,6 @@
             this.tabPageOefening4 = new System.Windows.Forms.TabPage();
             this.labelAnalog0 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.tabPageOefening5 = new System.Windows.Forms.TabPage();
-            this.labelHuidigeTempOefening5 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.labelGewensteTempOefening5 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.labelFeedback = new System.Windows.Forms.ToolStripStatusLabel();
             this.serialPortArduino = new System.IO.Ports.SerialPort(this.components);
@@ -114,8 +108,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabPageOefening4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.tabPageOefening5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.tabPageOefening6.SuspendLayout();
             this.SuspendLayout();
@@ -176,7 +168,6 @@
             this.tabControl.Controls.Add(this.tabPageOefening2);
             this.tabControl.Controls.Add(this.tabPageOefening3);
             this.tabControl.Controls.Add(this.tabPageOefening4);
-            this.tabControl.Controls.Add(this.tabPageOefening5);
             this.tabControl.Controls.Add(this.tabPageOefening6);
             this.tabControl.Location = new System.Drawing.Point(18, 81);
             this.tabControl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -782,78 +773,6 @@
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 0;
             this.pictureBox4.TabStop = false;
-            // 
-            // tabPageOefening5
-            // 
-            this.tabPageOefening5.Controls.Add(this.labelHuidigeTempOefening5);
-            this.tabPageOefening5.Controls.Add(this.label11);
-            this.tabPageOefening5.Controls.Add(this.labelGewensteTempOefening5);
-            this.tabPageOefening5.Controls.Add(this.label9);
-            this.tabPageOefening5.Controls.Add(this.pictureBox5);
-            this.tabPageOefening5.Location = new System.Drawing.Point(4, 29);
-            this.tabPageOefening5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageOefening5.Name = "tabPageOefening5";
-            this.tabPageOefening5.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageOefening5.Size = new System.Drawing.Size(1168, 608);
-            this.tabPageOefening5.TabIndex = 5;
-            this.tabPageOefening5.Text = "Oefening 5";
-            this.tabPageOefening5.UseVisualStyleBackColor = true;
-            // 
-            // labelHuidigeTempOefening5
-            // 
-            this.labelHuidigeTempOefening5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelHuidigeTempOefening5.Location = new System.Drawing.Point(926, 412);
-            this.labelHuidigeTempOefening5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelHuidigeTempOefening5.Name = "labelHuidigeTempOefening5";
-            this.labelHuidigeTempOefening5.Size = new System.Drawing.Size(150, 35);
-            this.labelHuidigeTempOefening5.TabIndex = 4;
-            this.labelHuidigeTempOefening5.Text = "20,2 °C";
-            this.labelHuidigeTempOefening5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(694, 418);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(195, 25);
-            this.label11.TabIndex = 3;
-            this.label11.Text = "Huidige Temperatuur";
-            // 
-            // labelGewensteTempOefening5
-            // 
-            this.labelGewensteTempOefening5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelGewensteTempOefening5.Location = new System.Drawing.Point(926, 366);
-            this.labelGewensteTempOefening5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelGewensteTempOefening5.Name = "labelGewensteTempOefening5";
-            this.labelGewensteTempOefening5.Size = new System.Drawing.Size(150, 35);
-            this.labelGewensteTempOefening5.TabIndex = 2;
-            this.labelGewensteTempOefening5.Text = "21,0 °C";
-            this.labelGewensteTempOefening5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(694, 371);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(217, 25);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Gewenste Temperatuur";
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::SerialCommunication.Properties.Resources.thermostat;
-            this.pictureBox5.Location = new System.Drawing.Point(36, 28);
-            this.pictureBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(951, 539);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 0;
-            this.pictureBox5.TabStop = false;
-            // 
             // statusStrip
             // 
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -984,9 +903,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabPageOefening4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.tabPageOefening5.ResumeLayout(false);
-            this.tabPageOefening5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.tabPageOefening6.ResumeLayout(false);
@@ -1050,12 +966,6 @@
         internal System.Windows.Forms.TabPage tabPageOefening4;
         internal System.Windows.Forms.Label labelAnalog0;
         internal System.Windows.Forms.PictureBox pictureBox4;
-        internal System.Windows.Forms.TabPage tabPageOefening5;
-        internal System.Windows.Forms.Label labelHuidigeTempOefening5;
-        internal System.Windows.Forms.Label label11;
-        internal System.Windows.Forms.Label labelGewensteTempOefening5;
-        internal System.Windows.Forms.Label label9;
-        internal System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel labelFeedback;
         private System.IO.Ports.SerialPort serialPortArduino;

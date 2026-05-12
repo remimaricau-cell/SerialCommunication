@@ -27,7 +27,6 @@ namespace SerialCommunication
         private const int BuzzerPin = 3;
         private const int BevestigKnopPin = 5;
 
-        private Timer timerOefening5;
         private Timer timerOefeningAlarm;
         private AlarmToestand alarmToestand = AlarmToestand.OK;
 
@@ -40,10 +39,6 @@ namespace SerialCommunication
             trackBarPWM9.Scroll += trackBarPWM9_Scroll;
             trackBarPWM10.Scroll += trackBarPWM10_Scroll;
             trackBarPWM11.Scroll += trackBarPWM11_Scroll;
-
-            timerOefening5 = new Timer(components);
-            timerOefening5.Interval = 1000;
-            timerOefening5.Tick += timerOefening5_Tick;
 
             timerOefeningAlarm = new Timer(components);
             timerOefeningAlarm.Interval = 1000;
@@ -302,50 +297,12 @@ namespace SerialCommunication
 
         private void UpdateTimers()
         {
-            timerOefening5.Enabled = tabControl.SelectedTab == tabPageOefening5;
             timerOefeningAlarm.Enabled = tabControl.SelectedTab == tabPageOefening6;
-        }
-
-        private void timerOefening5_Tick(object sender, EventArgs e)
-        {
-            HandleOefening5TimerTick();
         }
 
         private void timerOefeningAlarm_Tick(object sender, EventArgs e)
         {
             HandleOefeningAlarmTimerTick();
-        }
-
-        private void HandleOefening5TimerTick()
-        {
-            try
-            {
-                if (!serialPortArduino.IsOpen)
-                {
-                    labelFeedback.Text = "Geen open seriële verbinding";
-                    return;
-                }
-
-                int analog0 = ReadAnalogInput(0);
-                int analog1 = ReadAnalogInput(1);
-
-                double gewensteRichtingscoefficient = (45.0 - 5.0) / 1023.0;
-                double gewensteOffset = 5.0;
-                double gewensteTemperatuur = gewensteRichtingscoefficient * analog1 + gewensteOffset;
-
-                double huidigeRichtingscoefficient = (500.0 - 0.0) / 1023.0;
-                double huidigeOffset = 0.0;
-                double huidigeTemperatuur = huidigeRichtingscoefficient * analog0 + huidigeOffset;
-
-                labelGewensteTempOefening5.Text = gewensteTemperatuur.ToString("0.0") + " °C";
-                labelHuidigeTempOefening5.Text = huidigeTemperatuur.ToString("0.0") + " °C";
-
-                WriteSetCommand("set d2 " + (huidigeTemperatuur < gewensteTemperatuur ? "low" : "high"));
-            }
-            catch (Exception ex)
-            {
-                HandleSerialRuntimeError(ex);
-            }
         }
 
         private void HandleOefeningAlarmTimerTick()
@@ -507,7 +464,6 @@ namespace SerialCommunication
                 catch (Exception)
                 { }
 
-                timerOefening5.Stop();
                 timerOefeningAlarm.Stop();
                 buttonConnect.Text = "Connect";
                 radioButtonVerbonden.Checked = false;
